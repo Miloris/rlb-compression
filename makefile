@@ -1,5 +1,5 @@
 CXX = g++
-CXXFLAGS = -std=c++11 -Wall -Isrc
+CXXFLAGS = -std=c++11 -Wall -Isrc -Iinclude
 
 TARGETS = bin/search bin/compress
 
@@ -15,15 +15,15 @@ bin/compress: src/compress.cpp
 	mkdir -p bin
 	$(CXX) $(CXXFLAGS) -o $@ $<
 
-bin/HybridFileHandle.o: src/HybridFileHandle.cpp src/HybridFileHandle.hpp src/HybridBlockCache.hpp src/IFileHandle.hpp src/common.hpp
+bin/HybridFileHandle.o: src/HybridFileHandle.cpp include/HybridFileHandle.hpp include/HybridBlockCache.hpp include/IFileHandle.hpp include/common.hpp
 	mkdir -p bin
 	$(CXX) $(CXXFLAGS) -c -o $@ $<
 
-bin/IndexFile.o: src/IndexFile.cpp src/IndexFile.hpp src/HybridFileHandle.hpp src/IFileHandle.hpp src/utils.hpp
+bin/IndexFile.o: src/IndexFile.cpp include/IndexFile.hpp include/HybridFileHandle.hpp include/IFileHandle.hpp include/utils.hpp
 	mkdir -p bin
 	$(CXX) $(CXXFLAGS) -c -o $@ $<
 
-bin/utils.o: src/utils.cpp src/utils.hpp src/common.hpp src/IFileHandle.hpp
+bin/utils.o: src/utils.cpp include/utils.hpp include/common.hpp include/IFileHandle.hpp
 	mkdir -p bin
 	$(CXX) $(CXXFLAGS) -c -o $@ $<
 
