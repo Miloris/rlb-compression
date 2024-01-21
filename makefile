@@ -1,37 +1,31 @@
-# all: bin/search bin/compress
-
-# bin/search: src/search.cpp
-# 	mkdir -p bin
-# 	g++ -std=c++11 src/search.cpp -o bin/search
-
-# bin/compress: src/compress.cpp
-# 	mkdir -p bin
-# 	g++ -std=c++11 src/compress.cpp -o bin/compress
-
-# clean:
-# 	rm -rf bin
-
-
-# 定义编译器和编译选项
 CXX = g++
-CXXFLAGS = -std=c++11 -Wall
+CXXFLAGS = -std=c++11 -Wall -Isrc
 
-# 定义目标可执行文件
 TARGETS = bin/search bin/compress
 
-# 默认目标
+OBJS = bin/HybridFileHandle.o bin/IndexFile.o bin/utils.o
+
 all: $(TARGETS)
 
-# 编译 search 可执行文件
-bin/search: src/search.cpp src/IFileHandle.hpp src/common.hpp src/HybridBlockCache.hpp src/HybridBlockCache.hpp
+bin/search: src/search.cpp $(OBJS)
 	mkdir -p bin
-	$(CXX) $(CXXFLAGS) -o $@ src/search.cpp
+	$(CXX) $(CXXFLAGS) -o $@ $^
 
-# 编译 compress 可执行文件
 bin/compress: src/compress.cpp
 	mkdir -p bin
-	$(CXX) $(CXXFLAGS) -o $@ src/compress.cpp
+	$(CXX) $(CXXFLAGS) -o $@ $<
 
-# 清理目标
+bin/HybridFileHandle.o: src/HybridFileHandle.cpp src/HybridFileHandle.hpp src/HybridBlockCache.hpp src/IFileHandle.hpp src/common.hpp
+	mkdir -p bin
+	$(CXX) $(CXXFLAGS) -c -o $@ $<
+
+bin/IndexFile.o: src/IndexFile.cpp src/IndexFile.hpp src/HybridFileHandle.hpp src/IFileHandle.hpp src/utils.hpp
+	mkdir -p bin
+	$(CXX) $(CXXFLAGS) -c -o $@ $<
+
+bin/utils.o: src/utils.cpp src/utils.hpp src/common.hpp src/IFileHandle.hpp
+	mkdir -p bin
+	$(CXX) $(CXXFLAGS) -c -o $@ $<
+
 clean:
 	rm -rf bin

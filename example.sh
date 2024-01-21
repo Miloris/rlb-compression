@@ -6,5 +6,5 @@ make
 ./bin/compress dummy/dummy.txt dummy/dummy.rlb
 
 # Search for the word "in" in the compressed file dummy.rlb and output to dummy.idx
-# ./bin/search dummy/dummy.rlb dummy/dummy.idx "in" > dummy/dummy.res
-./bin/search dummy/dummy.rlb dummy/dummy.idx "in" 
+./bin/search dummy/dummy.rlb dummy/dummy.idx "in" > dummy/dummy.res
+# ./bin/search dummy/dummy.rlb dummy/dummy.idx "in" 
