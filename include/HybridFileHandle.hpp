@@ -9,6 +9,7 @@ class HybridFileHandle : public IFileHandle {
 private:
   // cache definition
   HybridBlockCache *_cache;
+
   // file api impl
   FILE *_handle;
   usize _file_size;
@@ -25,12 +26,15 @@ private:
   void _force_load_data_to_block(block_id id, usize offset);
   void _evict_block(block_id id);
   block_id _allocate_block();
+
   // block operations that are pretty smart and abstracts away the details
   block_id _get_block_r(usize offset);
   block_id _get_block_w(usize offset);
+
   // block-level i/o operations not yet abstracted
   usize _blk_read(usize offset, char *buffer, usize rel_offset, usize size);
   usize _blk_write(usize offset, char *buffer, usize rel_offset, usize size);
+
   // abstracted i/o operations
   usize _read(char *buffer, usize offset, usize size);
   void _write(char *buffer, usize offset, usize size);
@@ -40,6 +44,7 @@ public:
   HybridFileHandle(HybridBlockCache *cache_impl, const char *path,
                    const char *mode);
   ~HybridFileHandle();
+
   void seek(isize offset, SeekOrigin origin);
   usize tell();
   usize read(void *dest, usize size, usize count);

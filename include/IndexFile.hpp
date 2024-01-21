@@ -9,15 +9,16 @@ class IndexFile {
 private:
   IFileHandle *ifile_rlb, *ifile_idx;
   HybridBlockCache *cache_rlb, *cache_idx;
+
   uint32_t max_identifier, min_identifier;
   uint32_t C[128];
+
   bool big_flag;
   std::vector<Checkpoint> checkpoints;
   std::vector<std::tuple<uint32_t, uint32_t>> cp_idx;
   uint32_t idx_top = 0;
 
   /* Index File Management */
-
   void load_idx_file();
   void initialize_idx();
   void finalize_idx();

@@ -5,6 +5,7 @@ inline bool HybridFileHandle::_is_using_block(block_id id) {
   uint8_t flag = this->_cache->_cache_flags[id];
   return (bool)(flag & this->_cache->_flag_using);
 }
+
 // low-level (raw) block operations. they are really un-smart so they
 // always do what you tell them to
 void HybridFileHandle::_flush_block(block_id id) {
@@ -22,6 +23,7 @@ void HybridFileHandle::_flush_block(block_id id) {
   this->_cache->_cache_flags[id] = flag;
   return;
 }
+
 void HybridFileHandle::_force_load_data_to_block(block_id id, usize offset) {
   // assuming block is unused
   uint8_t flag = this->_cache->_cache_flags[id];
@@ -39,6 +41,7 @@ void HybridFileHandle::_force_load_data_to_block(block_id id, usize offset) {
   this->_cache->_cache_blksize[id] = bytes_read;
   return;
 }
+
 void HybridFileHandle::_evict_block(block_id id) {
   // skip if block is not used
   uint8_t flag = this->_cache->_cache_flags[id];
@@ -51,6 +54,7 @@ void HybridFileHandle::_evict_block(block_id id) {
   this->_cache->_cache_flags[id] = flag;
   return;
 }
+
 block_id HybridFileHandle::_allocate_block() {
   // LOOK HERE: change cache eviction logic from here
   // find a block to evict, and there's always at least one
@@ -79,6 +83,7 @@ block_id HybridFileHandle::_allocate_block() {
   this->_cache->_cache_last_ts[to_kick] = ++this->_cache->_lru_oracle;
   return to_kick;
 }
+
 // block operations that are pretty smart and abstracts away the details
 block_id HybridFileHandle::_get_block_r(usize offset) {
   // find existing block (offset must be exact multiples of the block size)
@@ -95,6 +100,7 @@ block_id HybridFileHandle::_get_block_r(usize offset) {
   this->_force_load_data_to_block(blk, offset);
   return blk;
 }
+
 block_id HybridFileHandle::_get_block_w(usize offset) {
   // find existing block in cache
   for (block_id i = 0; i < this->_cache->_block_count; i++) {
@@ -116,6 +122,7 @@ block_id HybridFileHandle::_get_block_w(usize offset) {
   this->_cache->_cache_flags[blk] |= this->_cache->_flag_dirty;
   return blk;
 }
+
 // block-level i/o operations not yet abstracted
 usize HybridFileHandle::_blk_read(usize offset, char *buffer, usize rel_offset,
                                   usize size) {
@@ -131,6 +138,7 @@ usize HybridFileHandle::_blk_read(usize offset, char *buffer, usize rel_offset,
          bytes_read);
   return bytes_read;
 }
+
 usize HybridFileHandle::_blk_write(usize offset, char *buffer, usize rel_offset,
                                    usize size) {
   // find block
@@ -148,6 +156,7 @@ usize HybridFileHandle::_blk_write(usize offset, char *buffer, usize rel_offset,
     this->_cache->_cache_blksize[blk] = new_blk_size;
   return bytes_written;
 }
+
 // abstracted i/o operations
 usize HybridFileHandle::_read(char *buffer, usize offset, usize size) {
   usize bytes_read = 0;
@@ -163,6 +172,7 @@ usize HybridFileHandle::_read(char *buffer, usize offset, usize size) {
   }
   return bytes_read;
 }
+
 void HybridFileHandle::_write(char *buffer, usize offset, usize size) {
   usize bytes_written = 0;
   usize blk_offset =
@@ -180,6 +190,7 @@ void HybridFileHandle::_write(char *buffer, usize offset, usize size) {
     this->_file_size = new_file_size;
   return;
 }
+
 void HybridFileHandle::_flush() {
   // flush all dirty blocks
   for (block_id i = 0; i < this->_cache->_block_count; i++) {
@@ -200,11 +211,13 @@ HybridFileHandle::HybridFileHandle(HybridBlockCache *cache_impl,
   memset(this->_hf_r_buffer, 0, sizeof(char) * 8);
   return;
 }
+
 HybridFileHandle::~HybridFileHandle() {
   this->_flush();
   fclose(this->_handle);
   return;
 }
+
 void HybridFileHandle::seek(isize offset, SeekOrigin origin) {
   isize new_ptr = 0;
   if (origin == SeekOrigin::cur) {
@@ -220,7 +233,9 @@ void HybridFileHandle::seek(isize offset, SeekOrigin origin) {
   this->_ptr = (usize)new_ptr;
   return;
 }
+
 usize HybridFileHandle::tell() { return this->_ptr; }
+
 usize HybridFileHandle::read(void *dest, usize size, usize count) {
   usize tot = size * count;
   usize bytes_read = this->_read((char *)dest, this->_ptr, tot);
@@ -228,12 +243,15 @@ usize HybridFileHandle::read(void *dest, usize size, usize count) {
   this->_eof_flag = bytes_read < tot;
   return bytes_read / size;
 }
+
 void HybridFileHandle::write(void *buffer, usize size, usize count) {
   this->_write((char *)buffer, this->_ptr, size * count);
   this->_ptr += size * count;
   return;
 }
+
 bool HybridFileHandle::eof() { return this->_eof_flag; }
+
 int HybridFileHandle::getc() {
   usize bytes_read = this->_read(this->_hf_r_buffer, this->_ptr, sizeof(char));
   this->_ptr += bytes_read;
