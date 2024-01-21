@@ -1,3 +1,5 @@
+#pragma once
+
 #include "common.hpp"
 
 /* Customised FileHandle to accelerate file I/O */

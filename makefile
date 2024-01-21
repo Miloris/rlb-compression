@@ -23,7 +23,7 @@ TARGETS = bin/search bin/compress
 all: $(TARGETS)
 
 # 编译 search 可执行文件
-bin/search: src/search.cpp src/IFileHandle.hpp src/common.hpp
+bin/search: src/search.cpp src/IFileHandle.hpp src/common.hpp src/HybridBlockCache.hpp src/HybridBlockCache.hpp
 	mkdir -p bin
 	$(CXX) $(CXXFLAGS) -o $@ src/search.cpp
 
