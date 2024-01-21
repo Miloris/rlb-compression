@@ -693,7 +693,7 @@ private:
     // return t/f, and pos
     tuple<bool, uint32_t> find_identifier(uint32_t id) {
         char buffer[20]; // Ensure enough space to store the number as a string
-        sprintf(buffer, "[%d]", id);
+        snprintf(buffer, sizeof(buffer), "[%d]", id);
         uint32_t l, r;
         tie(l, r) = find_match(buffer);
         if (l <= r) {

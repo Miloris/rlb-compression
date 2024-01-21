@@ -1,11 +1,12 @@
-all:
-	g++ -std=c++11 bwtsearch.cpp  -o bwtsearch
+all: bin/search bin/compress
 
-# run:
-# 	time valgrind --tool=massif --pages-as-heap=yes  time ./bwtsearch test/dummy.rlb idx/dummy.idx "in " 
+bin/search: src/search.cpp
+	mkdir -p bin
+	g++ -std=c++11 src/search.cpp -o bin/search
 
-
+bin/compress: src/compress.cpp
+	mkdir -p bin
+	g++ -std=c++11 src/compress.cpp -o bin/compress
 
 clean:
-	rm -f bwtsearch 
-
+	rm -rf bin

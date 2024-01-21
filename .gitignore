@@ -1,3 +1,12 @@
+# Local debug / history files
+backup
+*.rlb
+*.res
+
+# Executables
+bin
+
+
 # Prerequisites
 *.d
 
