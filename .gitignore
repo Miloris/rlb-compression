@@ -3,6 +3,8 @@ backup
 *.rlb
 *.res
 
+.DS_Store
+
 # Executables
 bin
 
