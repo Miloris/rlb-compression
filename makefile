@@ -1,31 +1,27 @@
 CXX = g++
-CXXFLAGS = -std=c++11 -Wall -Isrc -Iinclude
+CXXFLAGS = -std=c++11 -Wall -Iinclude -Isrc
+SRC_DIR = src
+BIN_DIR = bin
+INCLUDE_DIR = include
 
-TARGETS = bin/search bin/compress
-
-OBJS = bin/HybridFileHandle.o bin/IndexFile.o bin/utils.o
+TARGETS = $(BIN_DIR)/search $(BIN_DIR)/compress
+OBJS = $(BIN_DIR)/HybridFileHandle.o $(BIN_DIR)/IndexFile.o $(BIN_DIR)/utils.o
 
 all: $(TARGETS)
 
-bin/search: src/search.cpp $(OBJS)
-	mkdir -p bin
+$(BIN_DIR)/search: $(SRC_DIR)/search.cpp $(OBJS)
+	mkdir -p $(BIN_DIR)
 	$(CXX) $(CXXFLAGS) -o $@ $^
 
-bin/compress: src/compress.cpp
-	mkdir -p bin
+$(BIN_DIR)/compress: $(SRC_DIR)/compress.cpp
+	mkdir -p $(BIN_DIR)
 	$(CXX) $(CXXFLAGS) -o $@ $<
 
-bin/HybridFileHandle.o: src/HybridFileHandle.cpp include/HybridFileHandle.hpp include/HybridBlockCache.hpp include/IFileHandle.hpp include/common.hpp
-	mkdir -p bin
-	$(CXX) $(CXXFLAGS) -c -o $@ $<
-
-bin/IndexFile.o: src/IndexFile.cpp include/IndexFile.hpp include/HybridFileHandle.hpp include/IFileHandle.hpp include/utils.hpp
-	mkdir -p bin
-	$(CXX) $(CXXFLAGS) -c -o $@ $<
-
-bin/utils.o: src/utils.cpp include/utils.hpp include/common.hpp include/IFileHandle.hpp
-	mkdir -p bin
+$(BIN_DIR)/%.o: $(SRC_DIR)/%.cpp
+	mkdir -p $(BIN_DIR)
 	$(CXX) $(CXXFLAGS) -c -o $@ $<
 
 clean:
-	rm -rf bin
+	rm -rf $(BIN_DIR)
+
+.PHONY: all clean
